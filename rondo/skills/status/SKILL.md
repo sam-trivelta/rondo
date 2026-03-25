@@ -30,14 +30,24 @@ description: Checks Rondo's connectivity (JIRA API, GitHub) and shows the pipeli
 
 ### Pipeline state (only when TICKET-ID is given)
 
-4. **Check which state files exist** in the current repo:
-   - `.rondo/TICKET-ID/triage.md` → triaged
-   - `.rondo/TICKET-ID/plan.md` → planned
-   - `.rondo/TICKET-ID/fix.md` → fixed
+4. **Compute the Rondo config directory** for this repo:
 
-5. **Read the first line of each file that exists** (the `# Heading`) for a one-liner summary.
+   ```bash
+   RONDO_REPO_ID=$(git remote get-url origin 2>/dev/null \
+     | sed 's|.*[:/]\([^/]*/[^/]*\)$|\1|; s|\.git$||; s|/|-|g')
+   [ -z "$RONDO_REPO_ID" ] && RONDO_REPO_ID=$(basename "$(pwd)")
+   RONDO_DIR="$HOME/.config/rondo/$RONDO_REPO_ID"
+   TICKET_DIR="$RONDO_DIR/<TICKET-ID>"
+   ```
 
-6. **Print pipeline state:**
+5. **Check which state files exist:**
+   - `$TICKET_DIR/triage.md` → triaged
+   - `$TICKET_DIR/plan.md` → planned
+   - `$TICKET_DIR/fix.md` → fixed
+
+6. **Read the first line of each file that exists** (the `# Heading`) for a one-liner summary.
+
+7. **Print pipeline state:**
    ```
    ## COMP-2837 — Slack bigdeposit and bigwithdrawal channel improvement
 
@@ -51,4 +61,4 @@ description: Checks Rondo's connectivity (JIRA API, GitHub) and shows the pipeli
    - ⏳ = previous step done, this step is next
    - ✗ = blocked (previous step not done)
 
-   If no files exist at all: "No state found for TICKET-ID — start with `/rondo:triage TICKET-ID`"
+   If no files exist at all: "No state found for TICKET-ID — start with `/triage TICKET-ID`"

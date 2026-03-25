@@ -11,9 +11,21 @@ Goal: implement the approved plan, verify it passes lint and tests, and ship a P
 
 Before writing any code:
 
-1. **Read `rondo.yaml`** — get `test_command`, `lint_command`, `branch_prefix`, `jira.project_key`.
-2. **Confirm the current branch:** run `git branch --show-current`. It should match `{branch_prefix}/TICKET-ID-*`. If not, warn the user and stop.
-3. **Read the approved plan** — check `.rondo/TICKET-ID/plan.md` first. If it exists, read it as the source of truth. If not, look in the conversation. If neither exists, tell the user to run `/rondo:plan TICKET-ID` first.
+1. **Compute the Rondo config directory** for this repo:
+
+   ```bash
+   RONDO_REPO_ID=$(git remote get-url origin 2>/dev/null \
+     | sed 's|.*[:/]\([^/]*/[^/]*\)$|\1|; s|\.git$||; s|/|-|g')
+   [ -z "$RONDO_REPO_ID" ] && RONDO_REPO_ID=$(basename "$(pwd)")
+   RONDO_DIR="$HOME/.config/rondo/$RONDO_REPO_ID"
+   TICKET_DIR="$RONDO_DIR/<TICKET-ID>"
+   ```
+
+2. **Read `rondo.yaml`** from `$RONDO_DIR/rondo.yaml` — get `test_command`, `lint_command`, `branch_prefix`, `jira.project_key`. If missing, tell the user to run `/setup` first.
+
+3. **Confirm the current branch:** run `git branch --show-current`. It should match `{branch_prefix}/TICKET-ID-*`. If not, warn the user and stop.
+
+4. **Read the approved plan** from `$TICKET_DIR/plan.md`. If it doesn't exist, look in the conversation. If neither exists, tell the user to run `/plan TICKET-ID` first.
 
 ### Steps
 
@@ -68,11 +80,13 @@ Before writing any code:
    Run: `python "$(find ~/.claude/plugins -maxdepth 2 -name rondo -type d | head -1)/skills/fix/jira_transition.py" <TICKET-ID> "<status>"`
    The correct status name varies by project. If the script prints "not found" with a list of available statuses, pick the most appropriate one (e.g. "Manager Review", "Resolved") and retry. If the script errors (not just "transition not found"), print a warning ("⚠ Could not transition JIRA ticket — continuing.") and move on. Do not block.
 
-9. **Save fix summary to `.rondo/TICKET-ID/fix.md`:**
+9. **Save fix summary** to `$TICKET_DIR/fix.md`:
 
-   Ensure `.rondo/` is in `.gitignore` (same check as /triage — append if missing).
+   ```bash
+   mkdir -p "$TICKET_DIR"
+   ```
 
-   Write `.rondo/TICKET-ID/fix.md`:
+   Write `$TICKET_DIR/fix.md`:
    ```markdown
    # Fix: TICKET-ID
    **PR:** <url>
@@ -84,7 +98,7 @@ Before writing any code:
    ```
 
 10. **Post fix summary to JIRA** (best-effort):
-    Run: `python "$(find ~/.claude/plugins -maxdepth 2 -name rondo -type d | head -1)/skills/triage/jira_comment.py" <TICKET-ID> --file .rondo/<TICKET-ID>/fix.md`
+    Run: `python "$(find ~/.claude/plugins -maxdepth 2 -name rondo -type d | head -1)/skills/triage/jira_comment.py" <TICKET-ID> --file "$TICKET_DIR/fix.md"`
     If it fails, print a warning ("⚠ Could not post fix summary to JIRA — continuing.") and move on. Do not block.
 
 11. **Report back** with the PR URL and a one-sentence summary of what was done.

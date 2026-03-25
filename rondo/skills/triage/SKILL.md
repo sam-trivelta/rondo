@@ -9,12 +9,23 @@ Goal: understand the ticket and identify what needs to change in the repo.
 
 ### Steps
 
-1. **Check for existing triage output:**
-   Look for `.rondo/TICKET-ID/triage.md` in the current repo. If it exists, show the user its contents and ask: "Triage already exists for TICKET-ID — re-run or use cached?" Stop here if they want to use the cached version.
+1. **Compute the Rondo config directory** for this repo:
 
-2. **Read `rondo.yaml`** — get `jira.project_key` and `dev` settings. If missing, tell the user to run `/setup` first.
+   ```bash
+   RONDO_REPO_ID=$(git remote get-url origin 2>/dev/null \
+     | sed 's|.*[:/]\([^/]*/[^/]*\)$|\1|; s|\.git$||; s|/|-|g')
+   [ -z "$RONDO_REPO_ID" ] && RONDO_REPO_ID=$(basename "$(pwd)")
+   RONDO_DIR="$HOME/.config/rondo/$RONDO_REPO_ID"
+   TICKET_DIR="$RONDO_DIR/<TICKET-ID>"
+   ```
+   (substitute the actual ticket ID for `<TICKET-ID>` throughout)
 
-3. **Fetch ticket details:**
+2. **Check for existing triage output:**
+   Look for `$TICKET_DIR/triage.md`. If it exists, show the user its contents and ask: "Triage already exists for TICKET-ID — re-run or use cached?" Stop here if they want to use the cached version.
+
+3. **Read `rondo.yaml`** from `$RONDO_DIR/rondo.yaml` — get `jira.project_key` and `dev` settings. If missing, tell the user to run `/setup` first.
+
+4. **Fetch ticket details:**
 
    Run: `python "$(find ~/.claude/plugins -maxdepth 2 -name rondo -type d | head -1)/skills/triage/jira_fetch.py" <TICKET-ID>`
 
@@ -22,18 +33,18 @@ Goal: understand the ticket and identify what needs to change in the repo.
    > "JIRA API not configured. Please paste the ticket description (summary, acceptance criteria, any relevant context) and I'll proceed."
    Wait for the user to paste it before continuing.
 
-4. **Analyze the ticket:**
+5. **Analyze the ticket:**
    - **Type**: bug / feature / refactor / chore / investigation
    - **Complexity**: S (< 1 day) / M (1–3 days) / L (3+ days, consider splitting)
    - **Key entities**: extract function names, class names, module names, API endpoints, or data models mentioned in the ticket
 
-5. **Scan the repo for affected files** using Grep on the key entities from step 3:
+6. **Scan the repo for affected files** using Grep on the key entities from step 4:
    - Search `**/*.py` for the entity names
    - Search `**/test_*.py` and `**/tests/**` for existing test coverage
    - Search config files if the ticket involves settings or schemas
    List the top 5–10 most likely files to change, with a one-line reason each.
 
-6. **Present triage summary:**
+7. **Present triage summary:**
 
    ```
    ## Triage: TICKET-ID
@@ -48,13 +59,13 @@ Goal: understand the ticket and identify what needs to change in the repo.
    - anything unclear that needs answering before planning
    ```
 
-7. **Save triage output to `.rondo/TICKET-ID/triage.md`:**
+8. **Save triage output** — create `$TICKET_DIR/` and write `triage.md` there:
 
-   First, ensure `.rondo/` is in the repo's `.gitignore`:
-   - Read `.gitignore` (or check if it exists)
-   - If `.rondo/` or `.rondo` is not already in it, append `.rondo/` to `.gitignore` (create the file if it doesn't exist)
+   ```bash
+   mkdir -p "$TICKET_DIR"
+   ```
 
-   Then write `.rondo/TICKET-ID/triage.md` (create the directory if needed):
+   Contents of `$TICKET_DIR/triage.md`:
    ```markdown
    # Triage: TICKET-ID
    **Type:** ...
@@ -68,6 +79,6 @@ Goal: understand the ticket and identify what needs to change in the repo.
    - ...
    ```
 
-8. **Post to JIRA** (best-effort, never block on this):
-   Run: `python "$(find ~/.claude/plugins -maxdepth 2 -name rondo -type d | head -1)/skills/triage/jira_comment.py" <TICKET-ID> --file .rondo/<TICKET-ID>/triage.md`
+9. **Post to JIRA** (best-effort):
+   Run: `python "$(find ~/.claude/plugins -maxdepth 2 -name rondo -type d | head -1)/skills/triage/jira_comment.py" <TICKET-ID> --file "$TICKET_DIR/triage.md"`
    If it fails, print a warning ("⚠ Could not post to JIRA — continuing.") and move on. Do not block.
