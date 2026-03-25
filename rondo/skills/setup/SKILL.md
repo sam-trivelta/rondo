@@ -1,7 +1,9 @@
 ---
 name: setup
 description: Sets up Rondo for the current repository. Run once per repo to detect the dev environment (test runner, linter, branch conventions) and create rondo.yaml. Use when rondo.yaml is missing or needs updating.
+allowed-tools: [Bash, Read, Glob, Grep, Write, Edit]
 ---
+
 
 ## /setup
 

@@ -1,7 +1,10 @@
 ---
 name: plan
 description: Generates an implementation plan for a JIRA ticket. Reads triage output, produces a step-by-step plan, creates a git branch, and waits for human approval before any code is written. Use after /triage has been run for the ticket.
+argument-hint: <TICKET-ID>
+allowed-tools: [Bash, Read, Glob, Grep, Write, Edit]
 ---
+
 
 ## /plan <TICKET-ID>
 

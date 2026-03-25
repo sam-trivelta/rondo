@@ -1,7 +1,10 @@
 ---
 name: fix
 description: Executes an approved implementation plan. Writes code, runs linting and tests, commits, pushes the branch, and opens a GitHub PR. Use after /plan has been approved by the human.
+argument-hint: <TICKET-ID>
+allowed-tools: [Bash, Read, Glob, Grep, Write, Edit]
 ---
+
 
 ## /fix <TICKET-ID>
 

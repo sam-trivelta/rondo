@@ -1,7 +1,10 @@
 ---
 name: status
 description: Checks Rondo's connectivity (JIRA API, GitHub) and shows the pipeline state for a ticket. Use with no arguments to check connectivity, or with a ticket ID like COMP-2837 to see where it is in the triage → plan → fix pipeline.
+argument-hint: [TICKET-ID]
+allowed-tools: [Bash, Read, Glob, Grep, Write, Edit]
 ---
+
 
 ## /status [TICKET-ID]
 

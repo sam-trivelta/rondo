@@ -1,7 +1,10 @@
 ---
 name: triage
 description: Triages a JIRA ticket. Fetches the ticket details, identifies affected files in the repo, classifies type and complexity, and posts a summary. Use when given a JIRA ticket ID like COMP-123 or when asked to triage a ticket.
+argument-hint: <TICKET-ID>
+allowed-tools: [Bash, Read, Glob, Grep, Write, Edit]
 ---
+
 
 ## /triage <TICKET-ID>
 
