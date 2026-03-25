@@ -70,24 +70,3 @@ Goal: create or update `rondo.yaml` in `~/.config/rondo/<repo-id>/` — nothing 
 
    API tokens: id.atlassian.com → Security → API tokens.
    If not configured, `/triage` will fall back to copy-paste mode.
-
-8. **Offer to create `CLAUDE.md`** in the repo — only if the user wants teammates to see Rondo's working rules. This is optional. If the repo already has a `CLAUDE.md`, offer to append the Rondo rules section to it instead. Skip entirely if the user prefers no repo-level files.
-
-   If creating:
-   ```markdown
-   # <repo name>
-
-   ## Stack
-   - Language/framework: <inferred from repo scan>
-   - Test command: <from rondo.yaml>
-   - Lint command: <from rondo.yaml>
-
-   ## Rondo rules
-   - Always run `/setup` first if rondo.yaml config is missing.
-   - Never push code or open a PR without a human-approved plan.
-   - Never skip tests. Run the test command before committing.
-   - Branch naming: `{branch_prefix}/{TICKET-ID}-short-description`
-   - Commit format: `TICKET-ID: short description`
-   - Always link PRs back to the JIRA ticket in the PR body.
-   - When JIRA CLI is unavailable, ask the user to paste the ticket description.
-   ```
