@@ -1,6 +1,6 @@
 ---
 name: plan
-description: Generates an implementation plan for a JIRA ticket. Reads triage output, produces a step-by-step plan, creates a git branch, and waits for human approval before any code is written. Use after /triage has been run for the ticket.
+description: Generates an implementation plan for a JIRA ticket. Reads triage output, produces a step-by-step plan, and waits for human approval before any code is written. Use after /triage has been run for the ticket.
 argument-hint: <TICKET-ID>
 allowed-tools: [Bash, Read, Glob, Grep, Write, Edit]
 ---
@@ -8,7 +8,7 @@ allowed-tools: [Bash, Read, Glob, Grep, Write, Edit]
 
 ## /plan <TICKET-ID>
 
-Goal: produce an approved implementation plan and a clean git branch to work on.
+Goal: produce an approved implementation plan. Branch creation happens in `/fix`.
 
 ### Steps
 
@@ -46,18 +46,11 @@ Goal: produce an approved implementation plan and a clean git branch to work on.
    - What this PR will NOT do (keeps the PR focused)
    ```
 
-5. **Create the git branch:**
-   ```bash
-   git checkout {main_branch} && git pull
-   git checkout -b {branch_prefix}/TICKET-ID-short-description
-   ```
-   Keep the slug short (3–5 words, kebab-case). Use `main_branch` from rondo.yaml as the base.
-
-6. **Present the plan to the user and STOP.**
+5. **Present the plan to the user and STOP.**
    End with: "Approve this plan to proceed with `/fix TICKET-ID`."
    Do NOT write any code until the user explicitly approves.
 
-7. **Save plan to `$TICKET_DIR/plan.md`** (after user approves):
+6. **Save plan to `$TICKET_DIR/plan.md`** (after user approves):
 
    ```bash
    mkdir -p "$TICKET_DIR"
@@ -81,6 +74,6 @@ Goal: produce an approved implementation plan and a clean git branch to work on.
    - ...
    ```
 
-8. **Post plan to JIRA** (best-effort):
+7. **Post plan to JIRA** (best-effort):
    Run: `python "$(find ~/.claude/plugins -maxdepth 2 -name rondo -type d | head -1)/scripts/jira_comment.py" <TICKET-ID> --file "$TICKET_DIR/plan.md"`
    If it fails, print a warning ("⚠ Could not post plan to JIRA — continuing.") and move on. Do not block.

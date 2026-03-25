@@ -26,9 +26,17 @@ Before writing any code:
 
 2. **Read `rondo.yaml`** from `$RONDO_DIR/rondo.yaml` — get `test_command`, `lint_command`, `branch_prefix`, `jira.project_key`. If missing, tell the user to run `/setup` first.
 
-3. **Confirm the current branch:** run `git branch --show-current`. It should match `{branch_prefix}/TICKET-ID-*`. If not, warn the user and stop.
+3. **Read the approved plan** from `$TICKET_DIR/plan.md`. If it doesn't exist, look in the conversation. If neither exists, tell the user to run `/plan TICKET-ID` first.
 
-4. **Read the approved plan** from `$TICKET_DIR/plan.md`. If it doesn't exist, look in the conversation. If neither exists, tell the user to run `/plan TICKET-ID` first.
+4. **Create and switch to the branch** named in the plan:
+   ```bash
+   git checkout {main_branch} && git pull
+   git checkout -b {branch from plan.md}
+   ```
+   If the branch already exists (e.g. re-running `/fix` after a failure), just switch to it:
+   ```bash
+   git checkout {branch from plan.md}
+   ```
 
 ### Steps
 
