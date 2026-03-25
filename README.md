@@ -56,13 +56,7 @@ Displays saved triage and plan artifacts. Useful for reorienting in a new sessio
 gh auth login
 ```
 
-JIRA CLI (optional — enables fetching tickets and posting comments):
-```bash
-brew install jira-cli
-jira init
-```
-
-JIRA REST API (optional — for fetching tickets and posting comments):
+JIRA (optional — enables fetching tickets and posting comments):
 ```bash
 mkdir -p ~/.config/rondo
 cat > ~/.config/rondo/.env << 'EOF'
@@ -71,7 +65,7 @@ JIRA_EMAIL=you@yourorg.com
 JIRA_API_TOKEN=your-token
 EOF
 ```
-Get your API token at id.atlassian.com → Security → API tokens.
+Get your API token at https://id.atlassian.com/manage-profile/security — click **Create and manage API tokens**.
 This file is shared across all repos. A `.env` in any individual repo overrides it.
 
 ## rondo.yaml
