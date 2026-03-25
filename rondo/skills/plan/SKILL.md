@@ -48,11 +48,7 @@ Goal: produce an approved implementation plan. Branch creation happens in `/fix`
    - What this PR will NOT do (keeps the PR focused)
    ```
 
-5. **Present the plan to the user and STOP.**
-   End with: "Approve this plan to proceed with `/fix TICKET-ID`."
-   Do NOT write any code until the user explicitly approves.
-
-6. **Save plan to `$TICKET_DIR/plan.md`** (after user approves):
+5. **Save the plan draft to disk** (before asking for approval):
 
    ```bash
    mkdir -p "$TICKET_DIR"
@@ -76,6 +72,11 @@ Goal: produce an approved implementation plan. Branch creation happens in `/fix`
    - ...
    ```
 
-7. **Post plan to JIRA** (best-effort):
+6. **Present the plan to the user and STOP.**
+   End with:
+   > "Plan saved to `$TICKET_DIR/plan.md`. Reply **approved** (or just say yes) to post this to JIRA and proceed with `/fix TICKET-ID`. In a new session, use `/show TICKET-ID` to review it, then run `/fix TICKET-ID` directly."
+   Do NOT write any code until the user explicitly approves.
+
+7. **Post plan to JIRA** (best-effort, after user approves):
    Run: `python3 "$(find ~/.claude/plugins/marketplaces -maxdepth 2 -name rondo -type d | head -1)/scripts/jira_comment.py" <TICKET-ID> --file "$TICKET_DIR/plan.md"`
    If it fails, print a warning ("⚠ Could not post plan to JIRA — continuing.") and move on. Do not block.
