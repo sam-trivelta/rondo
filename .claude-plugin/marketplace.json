@@ -1,0 +1,13 @@
+{
+  "name": "rondo",
+  "owner": {
+    "name": "sam-trivelta"
+  },
+  "plugins": [
+    {
+      "name": "rondo",
+      "source": ".",
+      "description": "Automates the JIRA → code → PR dev loop"
+    }
+  ]
+}

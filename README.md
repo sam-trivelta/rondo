@@ -8,8 +8,18 @@ Claude Code plugin that automates the JIRA → code → PR dev loop.
 
 ## Install
 
+From within any Claude Code session:
+
+```
+/plugin marketplace add sam-trivelta/rondo
+/plugin install rondo@rondo
+/reload-plugins
+```
+
+For local development, use the `--plugin-dir` flag instead:
+
 ```bash
-/plugin add <org>/rondo
+claude --plugin-dir /path/to/rondo
 ```
 
 ## One-time setup per repo
@@ -17,7 +27,7 @@ Claude Code plugin that automates the JIRA → code → PR dev loop.
 Navigate to the target repo and run:
 
 ```
-/setup
+/rondo:setup
 ```
 
 Rondo scans the repo for your test runner, linter, and branch conventions, then writes `rondo.yaml` to the repo root. Run it once per repo. If no `CLAUDE.md` exists, Rondo offers to create one.
