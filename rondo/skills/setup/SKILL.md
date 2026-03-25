@@ -42,13 +42,21 @@ Goal: create or update `rondo.yaml` in the current repo root.
    ```
 
 6. **Check JIRA API connectivity:**
-   Remind the user that Rondo uses the JIRA REST API. The `.env` file in the Rondo repo root must have:
-   ```
+   Rondo reads credentials from `~/.config/rondo/.env` — a single file shared across all repos.
+   If it doesn't exist yet, show the user these commands to create it:
+
+   ```bash
+   mkdir -p ~/.config/rondo
+   cat > ~/.config/rondo/.env << 'EOF'
    JIRA_BASE_URL=https://yourorg.atlassian.net
    JIRA_EMAIL=you@yourorg.com
    JIRA_API_TOKEN=your-token
+   EOF
    ```
-   If these aren't set, `/triage` will fall back to copy-paste mode.
+
+   API tokens: id.atlassian.com → Security → API tokens.
+   If not configured, `/triage` will fall back to copy-paste mode.
+   A per-project `.env` in the repo root can override the global credentials if needed.
 
 7. **Offer to create or update `CLAUDE.md`** in the repo.
 

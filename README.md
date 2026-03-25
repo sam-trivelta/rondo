@@ -56,12 +56,17 @@ brew install jira-cli
 jira init
 ```
 
-JIRA REST API (optional — alternative to CLI for posting comments):
+JIRA REST API (optional — for fetching tickets and posting comments):
 ```bash
-export JIRA_BASE_URL="https://yourorg.atlassian.net"
-export JIRA_EMAIL="you@yourorg.com"
-export JIRA_API_TOKEN="your-token"   # id.atlassian.com → Security → API tokens
+mkdir -p ~/.config/rondo
+cat > ~/.config/rondo/.env << 'EOF'
+JIRA_BASE_URL=https://yourorg.atlassian.net
+JIRA_EMAIL=you@yourorg.com
+JIRA_API_TOKEN=your-token
+EOF
 ```
+Get your API token at id.atlassian.com → Security → API tokens.
+This file is shared across all repos. A `.env` in any individual repo overrides it.
 
 ## rondo.yaml
 

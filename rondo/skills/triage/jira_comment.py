@@ -25,15 +25,23 @@ from pathlib import Path
 
 
 def load_env() -> None:
-    env_file = Path.cwd() / ".env"
-    if not env_file.exists():
-        env_file = Path(__file__).parent.parent.parent / ".env"
-    if env_file.exists():
-        for line in env_file.read_text().splitlines():
-            line = line.strip()
-            if line and not line.startswith("#") and "=" in line:
-                key, _, value = line.partition("=")
-                os.environ.setdefault(key.strip(), value.strip())
+    """Load .env files in priority order (later files win; shell vars always win).
+
+    Search order (lowest to highest priority):
+      1. ~/.config/rondo/.env  — user-level credential store
+      2. <cwd>/.env            — per-project override
+    """
+    candidates = [
+        Path.home() / ".config" / "rondo" / ".env",
+        Path.cwd() / ".env",
+    ]
+    for env_file in candidates:
+        if env_file.exists():
+            for line in env_file.read_text().splitlines():
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    key, _, value = line.partition("=")
+                    os.environ.setdefault(key.strip(), value.strip())
 
 
 def parse_inline(text: str) -> list:
