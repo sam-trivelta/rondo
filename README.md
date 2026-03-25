@@ -30,18 +30,24 @@ Navigate to the target repo and run:
 /rondo:setup
 ```
 
-Rondo scans the repo for your test runner, linter, and branch conventions, then writes `rondo.yaml` to the repo root. Run it once per repo. If no `CLAUDE.md` exists, Rondo offers to create one.
+Rondo scans the repo for your test runner, linter, and branch conventions, then writes `rondo.yaml`. Run it once per repo.
 
 ## The Loop
 
-### `/triage TICKET-ID`
-Fetches the ticket via the `jira` CLI. If the CLI isn't available, Rondo asks you to paste the ticket description instead. Scans the repo for affected files and posts a triage summary.
+### `/rondo:triage TICKET-ID`
+Fetches the ticket via the JIRA REST API (or asks you to paste the description if not configured). Scans the repo for affected files and posts a triage summary back to JIRA.
 
-### `/plan TICKET-ID`
-Reads the triage output, generates a step-by-step implementation plan, and creates a git branch. **Stops and waits for your approval before writing any code.**
+### `/rondo:plan TICKET-ID`
+Reads the triage output and generates a step-by-step implementation plan. **Stops and waits for your approval before writing any code.**
 
-### `/fix TICKET-ID`
-Executes the approved plan: writes code, runs lint and tests, commits, pushes, and opens a PR via `gh`. Transitions the JIRA ticket to In Review if CLI access is available.
+### `/rondo:fix TICKET-ID`
+Executes the approved plan: creates a branch, writes code, runs lint and tests, commits, pushes, and opens a PR via `gh`. Transitions the JIRA ticket to In Review.
+
+### `/rondo:status [TICKET-ID]`
+Checks JIRA API and GitHub connectivity. With a ticket ID, shows where the ticket sits in the triage → plan → fix pipeline.
+
+### `/rondo:show TICKET-ID`
+Displays saved triage and plan artifacts. Useful for reorienting in a new session before running `/rondo:fix`.
 
 ## Environment
 
