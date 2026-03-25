@@ -30,7 +30,7 @@ Goal: understand the ticket and identify what needs to change in the repo.
 
 4. **Fetch ticket details:**
 
-   Run: `python "$(find ~/.claude/plugins -maxdepth 2 -name rondo -type d | head -1)/scripts/jira_fetch.py" <TICKET-ID>`
+   Run: `python3 "$(find ~/.claude/plugins/marketplaces -maxdepth 2 -name rondo -type d | head -1)/scripts/jira_fetch.py" <TICKET-ID>`
 
    If the output says "JIRA env vars not set" or the script errors, say:
    > "JIRA API not configured. Please paste the ticket description (summary, acceptance criteria, any relevant context) and I'll proceed."
@@ -83,5 +83,5 @@ Goal: understand the ticket and identify what needs to change in the repo.
    ```
 
 9. **Post to JIRA** (best-effort):
-   Run: `python "$(find ~/.claude/plugins -maxdepth 2 -name rondo -type d | head -1)/scripts/jira_comment.py" <TICKET-ID> --file "$TICKET_DIR/triage.md"`
+   Run: `python3 "$(find ~/.claude/plugins/marketplaces -maxdepth 2 -name rondo -type d | head -1)/scripts/jira_comment.py" <TICKET-ID> --file "$TICKET_DIR/triage.md"`
    If it fails, print a warning ("⚠ Could not post to JIRA — continuing.") and move on. Do not block.

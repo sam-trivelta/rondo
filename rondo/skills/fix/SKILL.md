@@ -88,7 +88,7 @@ Before writing any code:
    ```
 
 8. **Transition the JIRA ticket** (best-effort):
-   Run: `python "$(find ~/.claude/plugins -maxdepth 2 -name rondo -type d | head -1)/scripts/jira_transition.py" <TICKET-ID> "<status>"`
+   Run: `python3 "$(find ~/.claude/plugins/marketplaces -maxdepth 2 -name rondo -type d | head -1)/scripts/jira_transition.py" <TICKET-ID> "<status>"`
    The correct status name varies by project. If the script prints "not found" with a list of available statuses, pick the most appropriate one (e.g. "Manager Review", "Resolved") and retry. If the script errors (not just "transition not found"), print a warning ("⚠ Could not transition JIRA ticket — continuing.") and move on. Do not block.
 
 9. **Save fix summary** to `$TICKET_DIR/fix.md`:
@@ -109,7 +109,7 @@ Before writing any code:
    ```
 
 10. **Post fix summary to JIRA** (best-effort):
-    Run: `python "$(find ~/.claude/plugins -maxdepth 2 -name rondo -type d | head -1)/scripts/jira_comment.py" <TICKET-ID> --file "$TICKET_DIR/fix.md"`
+    Run: `python3 "$(find ~/.claude/plugins/marketplaces -maxdepth 2 -name rondo -type d | head -1)/scripts/jira_comment.py" <TICKET-ID> --file "$TICKET_DIR/fix.md"`
     If it fails, print a warning ("⚠ Could not post fix summary to JIRA — continuing.") and move on. Do not block.
 
 11. **Report back** with the PR URL and a one-sentence summary of what was done.

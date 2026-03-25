@@ -77,5 +77,5 @@ Goal: produce an approved implementation plan. Branch creation happens in `/fix`
    ```
 
 7. **Post plan to JIRA** (best-effort):
-   Run: `python "$(find ~/.claude/plugins -maxdepth 2 -name rondo -type d | head -1)/scripts/jira_comment.py" <TICKET-ID> --file "$TICKET_DIR/plan.md"`
+   Run: `python3 "$(find ~/.claude/plugins/marketplaces -maxdepth 2 -name rondo -type d | head -1)/scripts/jira_comment.py" <TICKET-ID> --file "$TICKET_DIR/plan.md"`
    If it fails, print a warning ("⚠ Could not post plan to JIRA — continuing.") and move on. Do not block.
