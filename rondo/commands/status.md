@@ -8,7 +8,7 @@ description: Checks Rondo's connectivity (JIRA API, GitHub) and shows the pipeli
 ### Connectivity check (always run this first)
 
 1. **Check JIRA API:**
-   Run: `python "$(find ~/.claude/plugins -maxdepth 2 -name rondo -type d | head -1)/skills/triage/jira_fetch.py" --check`
+   Run: `python "$(find ~/.claude/plugins -maxdepth 2 -name rondo -type d | head -1)/scripts/jira_fetch.py" --check`
    - Prints `ok: email@domain.com` on success
    - Prints an error message on failure
 
