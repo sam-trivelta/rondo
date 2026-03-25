@@ -48,13 +48,19 @@ allowed-tools: [Bash, Read, Glob, Grep, Write, Edit]
    - `$TICKET_DIR/plan.md` → planned
    - `$TICKET_DIR/fix.md` → fixed
 
-6. **Read the first line of each file that exists** (the `# Heading`) for a one-liner summary.
+6. **Read artifact summaries:**
+   - `triage.md`: grep for the `**Summary:**` line and print it
+   - `plan.md`: print the first paragraph after the `### Approach` heading
+   - `fix.md`: grep for the `**PR:**` line and print it
 
 7. **Print pipeline state:**
    ```
    ## COMP-2837 — Slack bigdeposit and bigwithdrawal channel improvement
 
      ✓ triaged  →  ✓ planned  →  ⏳ ready to fix
+
+   Triage: Extend fraud alert Slack with three changes: rejected withdrawal alert, username display, FTW/FTD threshold changes.
+   Plan approach: Add username field to event types and update _pam_link() to use it as link text.
 
    Next step: /fix COMP-2837
    ```
@@ -65,3 +71,5 @@ allowed-tools: [Bash, Read, Glob, Grep, Write, Edit]
    - ✗ = blocked (previous step not done)
 
    If no files exist at all: "No state found for TICKET-ID — start with `/triage TICKET-ID`"
+
+   **Tip:** `/plan` reads triage output automatically from disk — no need to find it manually in a new session.

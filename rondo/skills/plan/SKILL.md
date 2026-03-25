@@ -1,6 +1,6 @@
 ---
 name: plan
-description: Generates an implementation plan for a JIRA ticket. Reads triage output, produces a step-by-step plan, and waits for human approval before any code is written. Use after /triage has been run for the ticket.
+description: Generates an implementation plan for a JIRA ticket. Reads triage output from disk automatically — no manual lookup needed. Produces a step-by-step plan and waits for human approval before any code is written. You can scope the plan to a subset of the triage by saying so in the same message (e.g. "only plan the username change"). Use after /triage has been run for the ticket.
 argument-hint: <TICKET-ID>
 allowed-tools: [Bash, Read, Glob, Grep, Write, Edit]
 ---
@@ -25,6 +25,8 @@ Goal: produce an approved implementation plan. Branch creation happens in `/fix`
 2. **Read `rondo.yaml`** from `$RONDO_DIR/rondo.yaml` — get `branch_prefix`, `main_branch`, and `jira.project_key`. If missing, tell the user to run `/setup` first.
 
 3. **Read triage output** — check `$TICKET_DIR/triage.md` first. If it exists, read it. If not, look in the conversation for a triage summary. If neither exists, run `/triage TICKET-ID` now before proceeding.
+
+   If the user specified a scope in their message (e.g. "only plan the username change"), note it. Apply it when generating the plan — list the excluded items explicitly in the Out of Scope section with a reason (e.g. "out of scope for this PR — user excluded").
 
 4. **Generate implementation plan:**
 
