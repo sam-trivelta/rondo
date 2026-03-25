@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "rondo",
-      "source": ".",
+      "source": "./rondo",
       "description": "Automates the JIRA → code → PR dev loop"
     }
   ]
