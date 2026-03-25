@@ -1,5 +1,6 @@
 {
   "name": "rondo",
   "version": "0.1.0",
-  "description": "Automates the JIRA → code → PR dev loop. Provides /setup, /triage, /plan, /fix, and /status commands."
+  "description": "Automates the JIRA → code → PR dev loop. Provides /setup, /triage, /plan, /fix, and /status commands.",
+  "repository": "https://github.com/sam-trivelta/rondo"
 }
