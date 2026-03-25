@@ -1,0 +1,69 @@
+# Rondo
+
+Claude Code plugin that automates the JIRA → code → PR dev loop.
+
+```
+/setup  →  /triage TICKET-ID  →  review  →  /plan TICKET-ID  →  approve  →  /fix TICKET-ID
+```
+
+## Install
+
+```bash
+/plugin add <org>/rondo
+```
+
+## One-time setup per repo
+
+Navigate to the target repo and run:
+
+```
+/setup
+```
+
+Rondo scans the repo for your test runner, linter, and branch conventions, then writes `rondo.yaml` to the repo root. Run it once per repo. If no `CLAUDE.md` exists, Rondo offers to create one.
+
+## The Loop
+
+### `/triage TICKET-ID`
+Fetches the ticket via the `jira` CLI. If the CLI isn't available, Rondo asks you to paste the ticket description instead. Scans the repo for affected files and posts a triage summary.
+
+### `/plan TICKET-ID`
+Reads the triage output, generates a step-by-step implementation plan, and creates a git branch. **Stops and waits for your approval before writing any code.**
+
+### `/fix TICKET-ID`
+Executes the approved plan: writes code, runs lint and tests, commits, pushes, and opens a PR via `gh`. Transitions the JIRA ticket to In Review if CLI access is available.
+
+## Environment
+
+`gh` CLI must be authenticated:
+```bash
+gh auth login
+```
+
+JIRA CLI (optional — enables fetching tickets and posting comments):
+```bash
+brew install jira-cli
+jira init
+```
+
+JIRA REST API (optional — alternative to CLI for posting comments):
+```bash
+export JIRA_BASE_URL="https://yourorg.atlassian.net"
+export JIRA_EMAIL="you@yourorg.com"
+export JIRA_API_TOKEN="your-token"   # id.atlassian.com → Security → API tokens
+```
+
+## rondo.yaml
+
+Written by `/setup` into the target repo root. Edit manually if needed.
+
+```yaml
+jira:
+  project_key: PROJ   # e.g. COMP, COMPLENG
+
+dev:
+  test_command: pytest
+  lint_command: "black . --check"
+  branch_prefix: feat
+  main_branch: main
+```
