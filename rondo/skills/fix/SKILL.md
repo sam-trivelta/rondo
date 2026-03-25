@@ -26,7 +26,19 @@ Before writing any code:
 
 2. **Read `rondo.yaml`** from `$RONDO_DIR/rondo.yaml` — get `test_command`, `lint_command`, `branch_prefix`, `jira.project_key`. If missing, tell the user to run `/setup` first.
 
-3. **Read the approved plan** from `$TICKET_DIR/plan.md`. If it doesn't exist, look in the conversation. If neither exists, tell the user to run `/plan TICKET-ID` first.
+3. **Read and verify plan approval** from `$TICKET_DIR/plan.md`.
+   - If file doesn't exist: tell the user to run `/plan TICKET-ID` first and stop.
+   - If `**Status:** approved` → proceed.
+   - If `**Status:** draft` (or no Status line):
+     a. Display the full plan to the user.
+     b. Say: "This plan has not been approved yet. Reply **approved** to post it to JIRA and proceed."
+     c. On approval:
+        ```bash
+        sed -i '' 's/\*\*Status:\*\* draft/**Status:** approved/' "$TICKET_DIR/plan.md"
+        ```
+        Then post to JIRA (best-effort):
+        `python3 "$(find ~/.claude/plugins/marketplaces -maxdepth 2 -name rondo -type d | head -1)/scripts/jira_comment.py" <TICKET-ID> --file "$TICKET_DIR/plan.md"`
+        If it fails, warn and continue. Then proceed with the fix.
 
 4. **Create and switch to the branch** named in the plan:
    ```bash

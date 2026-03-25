@@ -58,6 +58,7 @@ Goal: produce an approved implementation plan. Branch creation happens in `/fix`
    ```markdown
    # Plan: TICKET-ID
    **Branch:** feat/TICKET-ID-short-description
+   **Status:** draft
 
    ## Approach
    ...
@@ -77,6 +78,10 @@ Goal: produce an approved implementation plan. Branch creation happens in `/fix`
    > "Plan saved to `$TICKET_DIR/plan.md`. Reply **approved** (or just say yes) to post this to JIRA and proceed with `/fix TICKET-ID`. In a new session, use `/show TICKET-ID` to review it, then run `/fix TICKET-ID` directly."
    Do NOT write any code until the user explicitly approves.
 
-7. **Post plan to JIRA** (best-effort, after user approves):
-   Run: `python3 "$(find ~/.claude/plugins/marketplaces -maxdepth 2 -name rondo -type d | head -1)/scripts/jira_comment.py" <TICKET-ID> --file "$TICKET_DIR/plan.md"`
+7. **On approval — update status and post to JIRA:**
+   ```bash
+   sed -i '' 's/\*\*Status:\*\* draft/**Status:** approved/' "$TICKET_DIR/plan.md"
+   ```
+   Then post (best-effort):
+   `python3 "$(find ~/.claude/plugins/marketplaces -maxdepth 2 -name rondo -type d | head -1)/scripts/jira_comment.py" <TICKET-ID> --file "$TICKET_DIR/plan.md"`
    If it fails, print a warning ("⚠ Could not post plan to JIRA — continuing.") and move on. Do not block.
